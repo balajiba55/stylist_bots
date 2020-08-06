@@ -4,6 +4,7 @@ const token = 'bXImbXJzYXBpdG9rZW4';
 const mobile_country = { TURKEY: '+90' };
 const language_code = 'tr';
 const country = 'Türkiye';
+const nationality = 'TR'
 const fcm_id = 'du_zCqvTqbc:APA91bE2ZjcKLHJKEV5_hsflmawt4LpA_vb4fCiDptJsWJweu7pBQY33537WRilTOBX6uEX_oQFEaUrJKUP8mEcPInxWnmcAC5v9NJIiN5FoMEjZb73YnSGIVidlXLuMxW5FFaJoWcGL'
 const user_type = { CUSTOMER: 1, VENDOR: 2 }; //For customer 2, For Vendor 1
 let performanceList = [];
@@ -17,6 +18,15 @@ VerifyOtp = require('./functions/verify_otp');
 checkCountry = require('./functions/check_country');
 getCitys = require('./functions/get_citys');
 getLanguages = require('./functions/get_languages');
+basicInfo = require('./functions/basic_info');
+getStyles = require('./functions/get_styles');
+vendorExpertise = require('./functions/vendor_expertise');
+stylistAbout = require('./functions/stylist_about');
+getallServices = require('./functions/getall_services');
+addportfolio = require('./functions/add_portfolio');
+addDocuments = require('./functions/add_documents');
+
+
 
 DeleteUser = require('./functions/delete_user');
 GenerateNumber = require('./hooks/generate_number');
@@ -66,13 +76,87 @@ async function start() {
                         MeasurePerformance.start(performance, PerformanceObserver, `getLanguages: ${mobile}`, `AC0${mobile}`, `AC1${mobile}`, performanceList);
                         if (debug) { console.log('getLanguages Result: ', getlanguagesResult); };
                         if (getlanguagesResult.success) {
-                            performance.mark(`DU0${mobile}`);
-                            deleteUserResult = await DeleteUser(debug, baseUrl, user_type.VENDOR, mobile_country.TURKEY, mobile);
-                            performance.mark(`DU1${mobile}`);
-                            MeasurePerformance.start(performance, PerformanceObserver, `Delete User: ${mobile}`, `DU0${mobile}`, `DU1${mobile}`, performanceList);
-                            if (debug) { console.log('Delete User Result: ', deleteUserResult); };
+                            performance.mark(`AD0${mobile}`);
+
+                            basicinfoResult = await basicInfo(debug, baseUrl, mobile, token, language_code, createOtpResult.user_id, mobile_country.TURKEY, nationality, country);
+                            performance.mark(`AD1${mobile}`);
+                            MeasurePerformance.start(performance, PerformanceObserver, `Basic Info: ${mobile}`, `AD0${mobile}`, `AD1${mobile}`, performanceList);
+                            if (debug) { console.log('Basic Info Result: ', basicinfoResult); };
+                            if (basicinfoResult.success) {
+                                performance.mark(`AE0${mobile}`);
+                                getStylesResult = await getStyles(debug, baseUrl, token, language_code, createOtpResult.user_id);
+                                performance.mark(`AE1${mobile}`);
+                                MeasurePerformance.start(performance, PerformanceObserver, `Get Styles: ${mobile}`, `AE0${mobile}`, `AE1${mobile}`, performanceList);
+                                if (debug) { console.log('Get Styles Result: ', getStylesResult); };
+                                if (getStylesResult.success) {
+                                    performance.mark(`AF0${mobile}`);
+                                    vendorExperienceResult = await vendorExpertise(debug, baseUrl, token, language_code, createOtpResult.user_id);
+                                    performance.mark(`AF1${mobile}`);
+                                    MeasurePerformance.start(performance, PerformanceObserver, `Vendor Experience: ${mobile}`, `AF0${mobile}`, `AF1${mobile}`, performanceList);
+                                    if (debug) { console.log('Vendor Experience Result: ', vendorExperienceResult); };
+                                    if (vendorExperienceResult.success) {
+                                        performance.mark(`AG0${mobile}`);
+                                        stylistAboutResult = await stylistAbout(debug, baseUrl, token, language_code, createOtpResult.user_id);
+                                        performance.mark(`AG1${mobile}`);
+                                        MeasurePerformance.start(performance, PerformanceObserver, `Stylist About: ${mobile}`, `AG0${mobile}`, `AG1${mobile}`, performanceList);
+                                        if (debug) { console.log('Stylist About Result: ', stylistAboutResult); };
+                                        if (stylistAboutResult.success) {
+                                            performance.mark(`AH0${mobile}`);
+                                            gatallServicesResult = await getallServices(debug, baseUrl, token, language_code, createOtpResult.user_id);
+                                            performance.mark(`AH1${mobile}`);
+                                            MeasurePerformance.start(performance, PerformanceObserver, `Get All Services: ${mobile}`, `AH0${mobile}`, `AH1${mobile}`, performanceList);
+                                            if (debug) { console.log('Get All Services Result: ', gatallServicesResult); };
+                                            if (gatallServicesResult.success) {
+                                                performance.mark(`AI0${mobile}`);
+                                                addporyfolioResult = await addportfolio(debug, baseUrl, token, language_code, createOtpResult.user_id);
+                                                performance.mark(`AI1${mobile}`);
+                                                MeasurePerformance.start(performance, PerformanceObserver, `Add portfolio: ${mobile}`, `AI0${mobile}`, `AI1${mobile}`, performanceList);
+                                                if (debug) { console.log('Add portfolio Result: ', addporyfolioResult); };
+                                                if (addporyfolioResult.success) {
+                                                    performance.mark(`AJ0${mobile}`);
+                                                    adddocumentsResult = await addDocuments(debug, baseUrl, token, language_code, createOtpResult.user_id);
+                                                    performance.mark(`AJ1${mobile}`);
+                                                    MeasurePerformance.start(performance, PerformanceObserver, `Add Documents: ${mobile}`, `AJ0${mobile}`, `AJ1${mobile}`, performanceList);
+                                                    if (debug) { console.log('Add Documents Result: ', adddocumentsResult); };
+                                                    if (adddocumentsResult.success) {
+
+                                                        performance.mark(`DU0${mobile}`);
+                                                        deleteUserResult = await DeleteUser(debug, baseUrl, user_type.VENDOR, mobile_country.TURKEY, mobile);
+                                                        performance.mark(`DU1${mobile}`);
+                                                        MeasurePerformance.start(performance, PerformanceObserver, `Delete User: ${mobile}`, `DU0${mobile}`, `DU1${mobile}`, performanceList);
+                                                        if (debug) { console.log('Delete User Result: ', deleteUserResult); };
+
+                                                    } else {
+                                                        throw (deleteUserResult)
+
+                                                    }
+                                                } else {
+                                                    throw (adddocumentsResult)
+
+                                                }
+                                            } else {
+                                                throw (addporyfolioResult)
+
+                                            }
+                                        } else {
+                                            throw (gatallServicesResult)
+
+                                        }
+                                    } else {
+                                        throw (stylistAboutResult)
+
+                                    }
+                                } else {
+                                    throw (vendorExperienceResult)
+
+                                }
+                            } else {
+                                throw (getStylesResult)
+
+                            }
+
                         } else {
-                            throw (deleteUserResult)
+                            throw (basicinfoResult)
 
                         }
                     } else {
@@ -88,7 +172,7 @@ async function start() {
                 throw (checkCountryResult)
             }
         } else {
-            console.log("comming to else>>>>>>>>>>>>>>>>>")
+
             throw (createOtpResult);
         }
     } catch (error) {
