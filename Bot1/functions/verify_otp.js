@@ -4,7 +4,7 @@ const axios = require('axios');
 async function runOnCommand(){
   //first two args are app path and node command. So we slice them.
   let args = process.argv.slice(2);
-  console.log("args.length >>>>>>>>>>>>",args.length)
+  // console.log("args.length >>>>>>>>>>>>",args.length)
   //If args length equals 0, it means called in a function
   if(args.length == 0){
     console.log('Internal Call For Verify OTP !!!')
